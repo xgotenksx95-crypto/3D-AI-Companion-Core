@@ -1,5 +1,40 @@
 # 3D AI Companion Core
 
+graph TD
+    %% Frontend (Browser / Three.js)
+    subgraph Frontend [Webview Interface - Three.js]
+        A[3D Avatar .vrm] -->|Render & Animation| B(Procedural Engine)
+        B -->|Lipsync / Blink / Head Move| A
+        C[Hybrid UI] -->|Text Input / Toggle| D{Mode Switch}
+    end
+
+    %% WebSockets communication
+    D -->|WebSockets: Data / Audio / Status| E[Flask-SocketIO]
+    E -->|WebSockets: Visemes / Text / Audio| B
+
+    %% Backend Runtimes
+    subgraph Backend [Local Backend - Python & C++]
+        E -->|Thread-Safe Queue| F(Sequential Runtime)
+        
+        subgraph Pipelines [Core Pipelines]
+            F -->|1. STT| G[Whisper / Silero VAD]
+            F -->|2. Memory| H[SQLite3 + Vector Embedding]
+            F -->|3. LLM Inferenz| I[llama.cpp GGUF Models]
+            F -->|4. TTS| J[Kokoro TTS Engine]
+        end
+    end
+
+    %% Hardware mapping
+    subgraph Hardware [Hardware Execution]
+        I -.->|VRAM / CPU Fallback| K[NVIDIA GPU / System RAM]
+        J -.->|Parallel Compute| K
+    end
+
+    style Frontend fill:#1f2937,stroke:#3b82f6,stroke-width:2px,color:#fff
+    style Backend fill:#111827,stroke:#10b981,stroke-width:2px,color:#fff
+    style Hardware fill:#374151,stroke:#f59e0b,stroke-width:1px,color:#fff
+
+
 Ein modularer, vollständig lokal laufender KI-Begleiter (Edge-AI) mit einem interaktiven 3D-Avatar im Browser. Das System kombiniert modernste Sprach- und Textverarbeitung mit prozeduraler Animation und einem datenschutzkonformen Langzeitgedächtnis. 
 
 Dieses Framework ist so konzipiert, dass es unabhängig vom genutzten Charakter-Sheet oder LLM-Modell funktioniert und vollständig über eine zentrale Konfigurationsdatei gesteuert werden kann.

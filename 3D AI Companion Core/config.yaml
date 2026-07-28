@@ -1,0 +1,40 @@
+# ==========================================
+# 3D AI Companion Core – Konfiguration
+# ==========================================
+
+# Llama.cpp (direkt eingebunden – kein LM Studio nötig!)
+llm:
+  model_path: "" # Pfad zum Llama.cpp-kompatiblen Modell
+  max_tokens: 200
+# Stimme
+tts:
+  backend: "kokoro"  # kokoro, edge, sovits
+  voice: "de-DE-SeraphinaMultilingualNeural"  # edge-tts Fallback
+  kokoro_voice: "af_heart"  # Kokoro voice, z. B. af_heart / bf_emma / bm_george
+  silence_ms: 300
+  http_port: 8766
+
+  
+# Whisper STT
+stt:
+  model: "small"  # Whisper-Modellgröße (tiny, base, small, medium, large)
+  language: "en"  # Englisch als Hauptsprache, aber Whisper kann auch Deutsch verstehen
+
+# Persöhnlichkeit
+character:
+  name: ""
+
+  personality: |
+
+   # Gedächtnis
+memory:
+  recent_messages_count: 10
+  backup_threshold: 50
+
+# Beenden-Befehle
+exit_commands:
+  - "tschüss"
+  - "beenden"
+  - "goodbye"
+  - "exit"
+  - "quit"

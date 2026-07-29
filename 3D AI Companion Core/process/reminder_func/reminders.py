@@ -1,4 +1,4 @@
-"""Aki Reminder-Tool – plant Erinnerungen, die nach X Minuten unaufgefordert ausgesprochen werden."""
+"""3D-AI-Companion-Core Reminder-Tool – plant Erinnerungen, die nach X Minuten unaufgefordert ausgesprochen werden."""
 
 import threading
 

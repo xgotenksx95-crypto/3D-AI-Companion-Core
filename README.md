@@ -19,7 +19,7 @@ Dieses Framework ist so konzipiert, dass es unabhängig vom genutzten Charakter-
 
 ```mermaid
 flowchart TD
-    ...
+
     STT["🎙️ Whisper STT\n+ Silero VAD"]
     TXT["⌨️ Text input\nFlask /agent_input"]
     QUEUE["⚙️ AiRuntime\nSequential job queue"]
@@ -36,7 +36,7 @@ flowchart TD
     LLM --> TTS
     TTS --> FRONT
     FRONT --> TXT
-
+...
 
 
 ## 📋 Voraussetzungen & Hardware

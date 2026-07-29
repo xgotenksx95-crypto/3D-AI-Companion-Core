@@ -1,4 +1,4 @@
-"""Aki Web-Search-Tool – nutzt DuckDuckGo (ddgs), kein API-Key nötig."""
+"""3D-AI-Companion-Core Web-Search-Tool – nutzt DuckDuckGo (ddgs), kein API-Key nötig."""
 
 from ddgs import DDGS
 

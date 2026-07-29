@@ -36,7 +36,7 @@ flowchart TD
     LLM --> TTS
     TTS --> FRONT
     FRONT --> TXT
-```
+
 
 
 ## 📋 Voraussetzungen & Hardware

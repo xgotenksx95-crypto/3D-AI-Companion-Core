@@ -1,32 +1,33 @@
 # 3D AI Companion Core
 
-Ein modularer, vollständig lokal laufender KI-Begleiter (Edge-AI) mit einem interaktiven 3D-Avatar im Browser. Das System kombiniert modernste Sprach- und Textverarbeitung mit prozeduraler Animation und einem datenschutzkonformen Langzeitgedächtnis. 
+Ein modularer, vollständig lokal laufender KI-Begleiter mit einem interaktiven 3D-Avatar im Browser. Das System kombiniert Sprach- und Textverarbeitung mit prozeduraler Animation und einem datenschutzkonformen Langzeitgedächtnis – vollständig offline, keine Cloud-APIs nötig.
 
-Dieses Framework ist so konzipiert, dass es unabhängig vom genutzten Charakter-Sheet oder LLM-Modell funktioniert und vollständig über eine zentrale Konfigurationsdatei gesteuert werden kann.
+---
 
 ## 🚀 Kern-Features
 
-- **3D-Avatar-Pipeline (Three.js):** Echtzeit-Rendering und Animation von Standard-VRM-Modellen direkt in einer Webview-Umgebung.
-- **Flüssige prozedurale Animation:** Mathematisch berechnetes Blinzeln, lebendige Kopfbewegungen und visembasierter Lipsync (Lippensynchronisation) synchron zur Audioausgabe.
-- **Thread-Sichere Runtime (Sequenzielle Queue):** Eine robuste Hintergrund-Queue fängt asynchrone Eingaben (gleichzeitiges Sprechen und Tippen) ab und verarbeitet sie stabil nacheinander, um Race Conditions in der Chat-History zu verhindern.
-- **High-Performance LLM-Inferenz:** Direkte Integration von `llama.cpp` zur hocheffizienten Ausführung von GGUF-Modellen (z. B. Llama 3.1 / Stheno) mit nativer VRAM-Auslastung.
-- **Lokales RAG (Langzeitgedächtnis):** SQLite3-Datenbank mit Vektorerweiterung und lokalem Sentence-Transformer-Embedding zur intelligenten, semantischen Faktenerkennung.
-- **High-End Audio-Pipeline:** Integrierte Silero Voice Activity Detection (VAD) für präzise Pausenerkennung beim Sprechen und Whisper für lokales Speech-to-Text (STT).
-- **Modernes WebSocket-Interface:** Ultra-niedrige Latenzzeiten bei der Übertragung von Mundbewegungen, Untertiteln und Modus-Wechseln zwischen Backend und Frontend via Flask-SocketIO.
-- **Hybrid Interface:** Nahtloser "Mode Switch" zwischen flüssiger Sprachsteuerung (Normal-Modus) und diskreter Texteingabe (Agent-Modus).
+- **3D-Avatar-Pipeline (Three.js/VRM):** Echtzeit-Rendering und Animation von Standard-VRM-Modellen direkt im Browser
+- **Prozedurale Animation:** Mathematisch berechnetes Blinzeln, Kopfbewegungen und Lipsync synchron zur Audioausgabe
+- **Thread-sichere Runtime:** Sequenzielle Job-Queue verhindert Race Conditions bei gleichzeitiger Sprach- und Texteingabe
+- **LLM-Inferenz (llama.cpp):** Direkte Ausführung von GGUF-Modellen mit nativer GPU-Beschleunigung
+- **Lokales RAG-Gedächtnis:** SQLite + sqlite-vec mit Sentence-Transformer-Embeddings für semantische Faktensuche
+- **Audio-Pipeline:** Silero VAD für Pausenerkennung, Whisper für lokales Speech-to-Text
+- **Flask-SocketIO Backend:** Echtzeit-Übertragung von Lipsync-Werten und Untertiteln ans Frontend
+- **Hybrid-Interface:** Nahtloser Wechsel zwischen Sprachsteuerung und Texteingabe
+
+---
 
 ## 🏗️ Systemarchitektur
 
 ```mermaid
 flowchart TD
-...
-    STT["🎙️ Whisper STT\n+ Silero VAD"]
-    TXT["⌨️ Text input\nFlask /agent_input"]
-    QUEUE["⚙️ AiRuntime\nSequential job queue"]
-    LLM["🧠 llama.cpp\nGGUF · GPU-accelerated"]
-    MEM["🗃️ Memory\nSQLite + sqlite-vec\nSemantic search"]
-    TTS["🔊 edge-tts\nSpeech synthesis\n+ procedural lipsync"]
-    FRONT["🖥️ Browser\nThree.js / VRM\nFlask-SocketIO"]
+    STT["Whisper STT + Silero VAD"]
+    TXT["Text input via Browser"]
+    QUEUE["AiRuntime – Sequential Queue"]
+    LLM["llama.cpp – GGUF Model"]
+    MEM["SQLite Memory + sqlite-vec"]
+    TTS["edge-tts – Speech Synthesis"]
+    FRONT["Browser – Three.js / VRM"]
 
     STT --> QUEUE
     TXT --> QUEUE
@@ -35,50 +36,110 @@ flowchart TD
     MEM --> LLM
     LLM --> TTS
     TTS --> FRONT
-    FRONT --> TXT
-...
+```
 
+---
 
-## 📋 Voraussetzungen & Hardware
+## 📋 Hardware-Anforderungen
 
-Das Framework ist ressourceneffizient optimiert und passt sich flexibel an die Hardware an:
-- **Mit GPU-Beschleunigung (Empfohlen):** NVIDIA-Grafikkarte (z. B. RTX-Serie ab 6GB+ VRAM) für parallele LLM-, Whisper- und Kokoro-Ausführung im Grafikspeicher.
-- **CPU-Fallback:** Dank `llama.cpp` können die GGUF-Modelle bei geringem VRAM direkt über den normalen Arbeitsspeicher (RAM) ausgeführt werden.
+| Komponente | Minimum | Empfohlen |
+|---|---|---|
+| GPU | 6 GB VRAM (NVIDIA) | 12–16 GB VRAM |
+| RAM | 16 GB | 32 GB |
+| Python | 3.10+ | 3.10+ |
 
-## 🔧 Installation & Setup
+Ohne GPU läuft das System via CPU-Fallback in llama.cpp, jedoch deutlich langsamer.
 
-1. **Repository klonen:**
-   ```bash
-   git clone https://github.com
-   cd DEIN_REPO_NAME
-   ```
+---
 
-2. **Virtuelle Umgebung erstellen & aktivieren:**
-   ```bash
-   python -m venv venv
-   # Unter Windows (CMD):
-   venv\Scripts\activate
-   # Unter Linux/Mac:
-   source venv/bin/activate
-   ```
+## 🔧 Installation
 
-3. **Abhängigkeiten installieren:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+**1. Repository klonen**
+```bash
+git clone https://github.com/xgotenksx95-crypto/3D-AI-Companion-Core.git
+cd "3D AI Companion Core"
+```
 
-4. **Konfiguration einrichten:**
-   Kopiere die Datei `config.example.yaml`, benenne sie in `config.yaml` um und füge dort deine Pfade, dein gewünschtes Charakter-Sheet sowie deine Parameter ein.
+**2. Virtuelle Umgebung erstellen**
+```bash
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# Linux / macOS:
+source venv/bin/activate
+```
 
-5. **Modelle & Assets hinterlegen (Wichtig):**
-   Da große KI-Modelle nicht auf GitHub hochgeladen werden, müssen diese manuell im Projekt platziert werden:
-   - **LLM-Modell:** Erstelle im Hauptverzeichnis einen Ordner namens `models/` und lege dort deine gewünschte `.gguf`-Datei ab. Passe den Pfad in der `config.yaml` an.
-   - **3D-Avatar:** Platziere dein eigenes 3D-Modell im Ordner `webview/` unter dem Namen `avatar.vrm`.
-   - **Animation:** Platziere deine Basis-Animationsdatei im Ordner `webview/` unter dem Namen `neutral.vrma`.
+**3. Abhängigkeiten installieren**
+```bash
+pip install -r requirements.txt
+```
 
-6. **Anwendung starten:**
-   Starte das Python-Backend im Hauptverzeichnis:
-   ```bash
-   python main.py
-   ```
-   Öffne anschließend die `index.html` im Ordner `webview/` im Browser deiner Wahl, um das 3D-Interface zu starten.
+Für GPU-Unterstützung muss llama-cpp-python mit CUDA-Flag gebaut werden:
+```bash
+set CMAKE_ARGS=-DGGML_CUDA=on
+pip install llama-cpp-python --no-cache-dir
+```
+
+**4. Konfiguration einrichten**
+
+Kopiere `config.example.yaml` zu `config.yaml` und passe die Werte an:
+```bash
+cp config.example.yaml config.yaml
+```
+
+**5. Modelle und Assets hinterlegen**
+
+Da große Modelldateien nicht im Repository liegen, müssen sie manuell platziert werden:
+
+- **LLM-Modell:** `.gguf`-Datei in den `models/`-Ordner legen und Pfad in `config.yaml` eintragen
+- **3D-Avatar:** Eigenes VRM-Modell als `webview/avatar.vrm` ablegen
+- **Basisanimation:** VRMA-Datei als `webview/neutral.vrma` ablegen
+
+**6. Starten**
+```bash
+python main.py
+```
+
+Danach `webview/index.html` im Browser öffnen.
+
+---
+
+## 📁 Projektstruktur
+
+```
+3D AI Companion Core/
+├── main.py                    # Einstiegspunkt, Flask-Server
+├── config.yaml                # Konfiguration (nicht im Repo)
+├── config.example.yaml        # Vorlage
+├── aki_runtime.py             # Job-Queue Runtime
+├── process/
+│   ├── llm_func/              # llama.cpp Integration
+│   ├── memory_func/           # SQLite + Vektorspeicher
+│   ├── stt_func/              # Whisper + Silero VAD
+│   ├── tts_func/              # Sprachsynthese
+│   ├── web_search_func/       # DuckDuckGo-Suche
+│   └── speech_normalization_func/
+├── webview/
+│   ├── index.html             # Browser-Frontend
+│   ├── main.js                # Three.js + VRM + SocketIO
+│   └── style.css
+└── models/                    # GGUF-Modelle (nicht im Repo)
+```
+
+---
+
+## ⚙️ Konfiguration
+
+Alle Einstellungen werden zentral in `config.yaml` verwaltet. Die Vorlage `config.example.yaml` zeigt alle verfügbaren Parameter:
+
+- **LLM:** Modellpfad, max. Token, Kontextgröße
+- **TTS:** Stimme, Backend (edge-tts / Kokoro)
+- **STT:** Whisper-Modellgröße, Sprache
+- **Character:** Name und Persönlichkeits-Prompt
+- **Memory:** Backup-Schwellwert, Kontextlänge
+
+---
+
+## 📄 Lizenz
+
+MIT License – siehe [LICENSE](LICENSE)

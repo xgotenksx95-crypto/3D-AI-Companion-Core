@@ -1,4 +1,3 @@
-<img width="300" height="229" alt="aki_v2_architecture" src="https://github.com/user-attachments/assets/5e50b2b1-8478-4e1d-a16f-3cf057216477" />
 # 3D AI Companion Core
 
 Ein modularer, vollständig lokal laufender KI-Begleiter (Edge-AI) mit einem interaktiven 3D-Avatar im Browser. Das System kombiniert modernste Sprach- und Textverarbeitung mit prozeduraler Animation und einem datenschutzkonformen Langzeitgedächtnis. 

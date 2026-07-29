@@ -17,8 +17,6 @@ Dieses Framework ist so konzipiert, dass es unabhängig vom genutzten Charakter-
 
 ## 🏗️ Systemarchitektur
 
-## 🏗️ Systemarchitektur
-
 ```mermaid
 flowchart TD
     STT["🎙️ Whisper STT\n+ Silero VAD"]

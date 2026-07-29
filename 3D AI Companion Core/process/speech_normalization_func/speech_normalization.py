@@ -1,4 +1,4 @@
-"""Aki Speech-Normalisierung – wandelt Zahlen in Text in ausgeschriebene Wörter um,
+"""3D-AI-Companion-Core Speech-Normalisierung – wandelt Zahlen in Text in ausgeschriebene Wörter um,
 damit TTS-Engines sie natürlich aussprechen, statt Ziffer für Ziffer vorzulesen."""
 
 import re

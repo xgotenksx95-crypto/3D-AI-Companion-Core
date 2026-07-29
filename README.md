@@ -17,7 +17,27 @@ Dieses Framework ist so konzipiert, dass es unabhängig vom genutzten Charakter-
 
 ## 🏗️ Systemarchitektur
 
+## 🏗️ Systemarchitektur
 
+```mermaid
+flowchart TD
+    STT["🎙️ Whisper STT\n+ Silero VAD"]
+    TXT["⌨️ Text input\nFlask /agent_input"]
+    QUEUE["⚙️ AiRuntime\nSequential job queue"]
+    LLM["🧠 llama.cpp\nGGUF · GPU-accelerated"]
+    MEM["🗃️ Memory\nSQLite + sqlite-vec\nSemantic search"]
+    TTS["🔊 edge-tts\nSpeech synthesis\n+ procedural lipsync"]
+    FRONT["🖥️ Browser\nThree.js / VRM\nFlask-SocketIO"]
+
+    STT --> QUEUE
+    TXT --> QUEUE
+    QUEUE --> LLM
+    LLM --> MEM
+    MEM --> LLM
+    LLM --> TTS
+    TTS --> FRONT
+    FRONT --> TXT
+```
 
 
 ## 📋 Voraussetzungen & Hardware
